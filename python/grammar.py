@@ -45,6 +45,26 @@ FILTER (lang(?name) = 'en')
 }
 """
 
+# European Rodents
+amphibian_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+?thing dct:subject dbc:Amphibians_of_Europe.
+?thing rdf:type dbo:Amphibian.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+}
+"""
+
 # Weather Conditions
 weather_query="""
 SELECT distinct ?thing ?name WHERE
@@ -78,56 +98,60 @@ FILTER (lang(?name) = 'en')
 
 # Grab stuff from dbpedia
 rodents = dbpedia_things(rodent_query)
+amphibians = dbpedia_things(amphibian_query)
 #print rodents
 weather = []
 for w in dbpedia_things(weather_query):
     weather.append(w.lower())
 #print weather
-stations = dbpedia_things(station_query)
-#print stations
-locations = []
-for s in stations:
-    locations.append(s.replace(' railway station',''))
+stations = []
+for s in dbpedia_things(station_query):
+    stations.append(s.replace(' railway station',''))
 
 # Tracery Grammar
 rules = {
-    'origin': ['#issue.capitalize#. #maybe_consequence#',
+    'origin': ['#issue.capitalize#. #consequence.capitalize#.',
                '#consequence.capitalize# due to #issue#.',
                '#disruption.capitalize# due to #issue#.'],
-    'maybe_consequence': ['', '#consequence.capitalize#'],
     'issue':  ['reports of #cause.s# #location#',
                '#problem.s# #location# caused by #cause.s#',
-               '#rodent_modifier.a# #rodent# sighted near #station#',
-               'high volumes of #rodent.s# reported at #station#'],
-    'rodent_modifier': ['large', 'aggressive', 'rare'], 
+               '#modified_animal.a# #sighted# near #station#',
+               'high volumes of #animal.s# reported at #station#'],
+    'sighted': ['sighted', 'on the tracks'],
+    'modified_animal': '#animal_modifier##animal#',
+    'animal_modifier': ['', '', 'large ', 'aggressive ', 'rare ', 'sleeping ', 'bewildered ', 'drunk ', 'distressed '], 
     'disruption': ['#service# #disrupted#'],
     'service': 'the #time# service from #station# to #station#',
-    'disrupted': ['is cancelled', 'is running #duration# late', 'will be diverted via #station#'],
+    'disrupted': ['will terminate at #station#',
+                  'is delayed', 'is cancelled',
+                  'is running #duration# late',
+                  'will be diverted via #station#'],
     'time': ['#hours#:#minutes#'],
     'hours': map(lambda x:("{:02d}".format(x)), range(0,24)),
     'minutes': map(lambda x:("{:02d}".format(x)), range(0,60)),
-    'problem': ['problem',
-                'technical issue',
+    'problem': ['technical issue',
                 'staff shortage',
                 'signal failure'],
     'location': ['in the #station# area',
                  'between #station# and #station#'],
-    'station': locations,
-    'rodent': rodents,
-    'cause': rodents + weather,
+    'animal': ['#rodent#', '#amphibian#'],
+    'cause': ['#rodent#','#amphibian#', '#weather#'],
     'consequence': ['delays of #modifier##duration# #expectation#',
             'delays of #modifier##duration# #expectation#',
-            'delays of #modifier##duration# #expectation#',
             'disruption #expectation# for the next #duration#',
             'disruption #expectation# for the next #duration#',
-            'disruption #expectation# for the next #duration#',
-            'limited catering on #service#',            
-            'caution advised'],
+            'limited catering on #service#',
+            '#caution# advised'],
+    'caution': ['caution', 'care'],
     'modifier': ['at least ', 'up to ', 'over '],
     'duration': '#number# #unit.s#',
     'number': ['two', 'five', 'ten', 'twenty'],
     'unit': ['minute', 'minute', 'hour'],
-    'expectation': ['likely', 'expected', 'predicted']
+    'expectation': ['likely', 'expected', 'predicted'],
+    'rodent': rodents,
+    'amphibian': amphibians,
+    'weather': weather,
+    'station': stations
 }
 
 # Write the grammar out to json

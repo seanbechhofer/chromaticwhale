@@ -13,6 +13,7 @@ import sparql
 parser = argparse.ArgumentParser(description='Generate Tracery Grammar.')
 parser.add_argument('-i', '--input', help='output file', default="grammar.json")
 parser.add_argument('-n', '--number', help='output file', type=int, default=4)
+parser.add_argument('-p', '--production', default="origin")
 parser.add_argument('--html', action="store_true")
 
 args = parser.parse_args()
@@ -24,16 +25,27 @@ grammar = tracery.Grammar(rules)
 grammar.add_modifiers(base_english)
 if args.html:
     print "<html>"
-    print "<head><style>body {font-family: 'Open Sans';}</style></head>"
+    print """
+    <head>
+    <style>
+    body {font-family: 'Open Sans'; background: #fff;}
+    div.box {border: solid black; background: #eee; padding: 10px; margin: 5px}
+    p {margin: 0px;}
+    .right {text-align: right;}
+    </style>
+    </head>
+    """
     print "<body>"
     
 for i in range(0,args.number):
     if args.html:
-        print "<p>"
-    print grammar.flatten("#origin#")
+        print "<div class='box'>"
+    stuff = grammar.flatten("#" + args.production + "#")
+    print "<p>{}</p>".format(stuff)
     print
     if args.html:
-        print "</p>"
+        print "<p class='right'>({})</p>".format(len(stuff))
+        print "</div>"
     
 
 if args.html:

@@ -23,6 +23,8 @@ with open(args.input) as f:
     
 grammar = tracery.Grammar(rules)
 grammar.add_modifiers(base_english)
+
+# Should really do html via templates, but quick'n'dirty FTW!.
 if args.html:
     print "<html>"
     print """
@@ -41,7 +43,10 @@ for i in range(0,args.number):
     if args.html:
         print "<div class='box'>"
     stuff = grammar.flatten("#" + args.production + "#")
-    print "<p>{}</p>".format(stuff)
+    if args.html:
+        print "<p>{}</p>".format(stuff)
+    else:
+        print "{}".format(stuff)
     print
     if args.html:
         print "<p class='right'>({})</p>".format(len(stuff))

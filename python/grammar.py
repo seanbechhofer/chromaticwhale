@@ -45,6 +45,35 @@ FILTER (lang(?name) = 'en')
 }
 """
 
+# Pests. This is a bit hacky as the list includes some things we don't
+# really want, like latin names. Also, tracery's plural modifier
+# doesn't handle moths!
+pests_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+?thing dct:subject dbc:Household_pest_insects.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name, "tus", "i"))
+FILTER (!regex(?name, "pes", "i"))
+FILTER (!regex(?name, "mex", "i"))
+FILTER (!regex(?name, "ella", "i"))
+FILTER (!regex(?name, "dae", "i"))
+FILTER (!regex(?name, "genus", "i"))
+FILTER (!regex(?name, "entomology", "i"))
+FILTER (!regex(?name, "moth", "i"))
+
+}
+"""
+
 # European Rodents
 amphibian_query="""
 PREFIX dbp: <http://dbpedia.org/property/>
@@ -69,16 +98,32 @@ FILTER (lang(?name) = 'en')
 weather_query="""
 SELECT distinct ?thing ?name WHERE
 {
-?thing dct:subject dbc:Weather_hazards.
-?thing rdfs:label ?name.
-{?thing rdf:type yago:NaturalPhenomenon111408559.}
+ ?thing dct:subject dbc:Weather_hazards.
+ ?thing rdfs:label ?name.
+ {
+  {?thing rdf:type yago:NaturalPhenomenon111408559.}
       UNION
-{?thing rdf:type yago:Danger114541044.}.
+  {?thing rdf:type yago:Danger114541044.}.
+ }
 FILTER (lang(?name) = 'en')
+FILTER (!regex(?name,"\\\\(","i"))
 }
 """
 
-# Northern Rail Stations
+# Again, some hand pruning to get rid of chaff.
+hazard_query="""
+SELECT distinct ?thing ?name WHERE
+{
+?thing dct:subject dbc:Geological_hazards.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name,"list","i"))
+FILTER (!regex(?name,"large","i"))
+FILTER (!regex(?name,"hazards","i"))
+}
+"""
+
+# Northern Rail Stations. This one works well. 
 station_query="""
 PREFIX dbp: <http://dbpedia.org/property/>
 PREFIX dbr: <http://dbpedia.org/resource/>
@@ -99,11 +144,13 @@ FILTER (lang(?name) = 'en')
 # Grab stuff from dbpedia
 rodents = dbpedia_things(rodent_query)
 amphibians = dbpedia_things(amphibian_query)
-#print rodents
+pests = dbpedia_things(pests_query)
 weather = []
 for w in dbpedia_things(weather_query):
     weather.append(w.lower())
-#print weather
+hazard = []
+for h in dbpedia_things(hazard_query):
+    hazard.append(h.lower())
 stations = []
 for s in dbpedia_things(station_query):
     stations.append(s.replace(' railway station',''))
@@ -115,15 +162,18 @@ rules = {
                '#issue.capitalize#. #disruption.capitalize#.',
                '#consequence.capitalize# due to #issue#.',
                '#disruption.capitalize# due to #issue#.',
-               '#disruption.capitalize# due to #issue#.', 
-               '#station# closed due to #infestation##animal.s#. Services will run via #station# for the next #duration#.'],
+               '#disruption.capitalize# due to #issue#.',
+               '#infestation#'],
     'issue':  ['reports of #cause.s# #location#',
                '#problem.s# #location# caused by #cause.s#',
                '#modified_animal.a# #sighted# near #station#',
-               'high volumes of #animal.s# reported at #station#'],
+               '#quantity# #animal.s# reported at #station#'],
+    'quantity': ['high volumes of', 'several', 'numerous', 'unprecedented levels of', 'groups of'],
+    'infestation': '#station# closed due to #infestation_type##animal_or_pest.s#. #infestation_disruption.capitalize#',
+    'infestation_type': ['', 'an infestation of '],
+    'infestation_disruption': ['delays expected', 'services will run via #station# for the next #duration#.', 'replacement bus service from #station#.'],
     'sighted': ['sighted', 'on the tracks', 'reported'],
     'modified_animal': '#animal_modifier##animal#',
-    'infestation': ['', 'an infestation of '],
     'animal_modifier': ['', '', '', 'large ', 'aggressive ', 'rare ', 'sleeping ', 'bewildered ',
                         'drunk ', 'distressed ', 'unkempt ', 'weak ', 'curious ', 'migrating '], 
     'disruption': ['#service# #disrupted#'],
@@ -140,21 +190,25 @@ rules = {
                 'signal failure'],
     'location': ['in the #station# area',
                  'between #station# and #station#'],
+    'animal_or_pest': ['#animal#','#pest#'],
     'animal': ['#rodent#', '#amphibian#'],
-    'cause': ['#rodent#','#amphibian#', '#weather#'],
+    'cause': ['#rodent#','#amphibian#', '#weather#', '#hazard#'],
     'consequence': ['delays of #modifier##duration# #expectation#',
             'disruption #expectation# for the next #duration#',
             'limited catering on #service#',
-            '#caution# advised'],
+            '#caution# advised',
+            'replacement bus service between #station# and #station#'],
     'caution': ['caution', 'care'],
     'modifier': ['at least ', 'up to ', 'over '],
     'duration': '#number# #unit.s#',
     'number': ['two', 'five', 'ten', 'twenty'],
     'unit': ['minute', 'minute', 'hour'],
     'expectation': ['likely', 'expected', 'predicted'],
+    'pest': pests,
     'rodent': rodents,
     'amphibian': amphibians,
     'weather': weather,
+    'hazard': hazard,
     'station': stations
 }
 

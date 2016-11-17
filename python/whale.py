@@ -12,7 +12,7 @@ import sparql
 
 
 parser = argparse.ArgumentParser(description='Generate Tracery Grammar.')
-parser.add_argument('-o', '--output', help='output file', default="grammar.json")
+parser.add_argument('-o', '--output', help='output file', default="whale.json")
 
 args = parser.parse_args()
 
@@ -177,11 +177,14 @@ rules = {
     'animal_modifier': ['', '', '', 'large ', 'aggressive ', 'rare ', 'sleeping ', 'bewildered ',
                         'drunk ', 'distressed ', 'unkempt ', 'weak ', 'curious ', 'migrating '], 
     'disruption': ['#service# #disrupted#'],
-    'service': 'the #time# service from #station# to #station#',
+#    'service': 'the #time# service from #station# to #station#',
+    'service': 'the #time# from #station# to #station#',
     'disrupted': ['will terminate at #station#',
                   'is delayed', 'is cancelled',
                   'is running #duration# late',
-                  'will be diverted via #station#'],
+                  'will be diverted via #station#',
+                  'will #maybe_call# call at #station#'],
+    'maybe_call': ['no longer', 'additionally'],
     'time': ['#hours#:#minutes#'],
     'hours': map(lambda x:("{:02d}".format(x)), range(0,24)),
     'minutes': map(lambda x:("{:02d}".format(x)), range(0,60)),

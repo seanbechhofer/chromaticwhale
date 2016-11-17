@@ -24,6 +24,8 @@ with open(args.input) as f:
 grammar = tracery.Grammar(rules)
 grammar.add_modifiers(base_english)
 
+LIMIT = 140
+
 # Should really do html via templates, but quick'n'dirty FTW!.
 if args.html:
     print "<html>"
@@ -34,15 +36,20 @@ if args.html:
     div.box {border: solid black; background: #eee; padding: 10px; margin: 5px}
     p {margin: 0px;}
     .right {text-align: right;}
+    .red {color: red;}
     </style>
     </head>
     """
     print "<body>"
     
 for i in range(0,args.number):
-    if args.html:
-        print "<div class='box'>"
     stuff = grammar.flatten("#" + args.production + "#")
+    style = ""
+    if len(stuff) > LIMIT:
+        style = " red"
+
+    if args.html:
+        print "<div class='box" + style + "'>"
     if args.html:
         print "<p>{}</p>".format(stuff)
     else:

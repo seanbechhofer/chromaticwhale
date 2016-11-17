@@ -32,9 +32,9 @@ if args.html:
     print """
     <head>
     <style>
-    body {font-family: 'Open Sans'; background: #fff;}
-    div.box {border: solid black; background: #eee; padding: 10px; margin: 5px}
-    p {margin: 0px;}
+    body {font-family: 'Helvetica Neue', 'Open Sans'; background: #fff;}
+    div.box {border: solid black; background: #eee; padding: 10px; margin: 20px}
+    p {margin: 0px;font-size: large;}
     .right {text-align: right;}
     .red {color: red;}
     </style>

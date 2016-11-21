@@ -37,8 +37,9 @@ and attempt to tweet it. Arguments are:
 		
 The configuration file is a json file that contains information about
 the grammar to be used, the production rule to use, and the freqency
-of updates. As an example, the @chromaticwhale account configuration
-is:
+of updates. As an example, the
+[@chromaticwhale](http://twitter.com/chromaticwhale) account
+configuration is:
 
 ```
 {
@@ -58,18 +59,19 @@ python python/twitterbot.py --config config.json
 On occasion, generated tweets may be larger than 140 characters. The
 tweetbot will regenerate (up to 10 times) until a tweet of the right
 length is obtained. If, after 10 attempts, a tweet of the correct size
-has not been generated, the script reports this and finished. If the
+has not been generated, the script reports this and finishes. If the
 grammar is changed, this may need revisiting.
 
-Otherwise, the frequency value is used to dictate whether or not the bot will
-tweet on that cycle. A random number is generated between 0 and
-frequency-1. If that number is 0, then a tweet is issued. If the value
-is non zero, then no tweet is generated. Thus a frequency value of 1
-guarantees that a tweet will be issued. A heroku scheduler allows for
-intervals of 10 minutes, hourly or daily, so the frequency mechanism
-gives us a certain element of randomness, and some flexibility of the
-periodicity of tweets. The @chromaticwhale scheduler fires up every
-hour, so on average, will tweet every three hours.
+Otherwise, the frequency value is used to dictate whether or not the
+bot will tweet on that cycle. A random number is generated between `0`
+and `frequency-1`. If that number is `0`, then a tweet is issued. If
+the value is non zero, then no tweet is generated. Thus a frequency
+value of 1 guarantees that a tweet will be issued. A heroku scheduler
+allows for intervals of 10 minutes, hourly or daily, so the frequency
+mechanism gives us a certain element of randomness, and some
+flexibility of the periodicity of tweets. The
+[@chromaticwhale](http://twitter.com/chromaticwhale) scheduler fires
+up every hour, so on average, will actually tweet every three hours.
 
 Authentication to twitter is controlled via four variables: `API_KEY`,
 `API_SECRET`, `ACCESS_TOKEN`, `ACCESS_SECRET`. For obvious reasons,

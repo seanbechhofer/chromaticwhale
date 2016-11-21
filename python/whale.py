@@ -28,6 +28,24 @@ def dbpedia_things(query):
     return things
 
 # European Rodents
+market_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+?thing dct:subject dbc:Stock_exchanges_in_Europe.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+}
+"""
+
+# European Rodents
 rodent_query="""
 PREFIX dbp: <http://dbpedia.org/property/>
 PREFIX dbr: <http://dbpedia.org/resource/>
@@ -45,6 +63,24 @@ FILTER (lang(?name) = 'en')
 }
 """
 
+godzilla_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+?thing dct:subject dbc:Godzilla_characters.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name, "\\\\(", "i"))
+FILTER (!regex(?name, "list", "i"))
+}
+"""
 # Pests. This is a bit hacky as the list includes some things we don't
 # really want, like latin names. Also, tracery's plural modifier
 # doesn't handle moths!
@@ -142,6 +178,7 @@ FILTER (lang(?name) = 'en')
 """
 
 # Grab stuff from dbpedia
+monster = dbpedia_things(godzilla_query)
 rodents = dbpedia_things(rodent_query)
 amphibians = dbpedia_things(amphibian_query)
 pests = dbpedia_things(pests_query)
@@ -154,6 +191,7 @@ for h in dbpedia_things(hazard_query):
 stations = []
 for s in dbpedia_things(station_query):
     stations.append(s.replace(' railway station',''))
+markets = dbpedia_things(market_query)
 
 # Tracery Grammar
 rules = {
@@ -163,11 +201,17 @@ rules = {
                '#consequence.capitalize# due to #issue#.',
                '#disruption.capitalize# due to #issue#.',
                '#disruption.capitalize# due to #issue#.',
+#               '#disruption.capitalize# due to #market_issue#.',
                '#infestation#'],
     'issue':  ['reports of #cause.s# #location#',
                '#problem.s# #location# caused by #cause.s#',
                '#modified_animal.a# #sighted# near #station#',
+               '#monster.capitalize# #sighted# near #station#',
                '#quantity# #animal.s# reported at #station#'],
+    'market_issue': [
+        'falling values on the #market#',
+        'heavy trading on the #market#',
+        'suspicious trades on the #market#'],
     'quantity': ['high volumes of', 'several', 'numerous', 'unprecedented levels of', 'groups of'],
     'infestation': '#station# closed due to #infestation_type##animal_or_pest.s#. #infestation_disruption.capitalize#',
     'infestation_type': ['', 'an infestation of '],
@@ -212,7 +256,9 @@ rules = {
     'amphibian': amphibians,
     'weather': weather,
     'hazard': hazard,
-    'station': stations
+    'station': stations,
+    'market': markets,
+    'monster': monster
 }
 
 # Write the grammar out to json

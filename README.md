@@ -5,9 +5,9 @@ Code to generate tracery grammars for bogus travel reports.
 Pulls lists of things (European rodents, adverse weather events etc)
 and Northern Rail stations from dbpedia via the SPARQL endpoint.
 
-Tracery](https://github.com/galaxykate/tracery)grammars generate reports via [pytracery](https://github.com/aparrish/pytracery).
+[Tracery](https://github.com/galaxykate/tracery) grammars generate reports via [pytracery](https://github.com/aparrish/pytracery).
 
-The bot is currently tweeting to [https://twitter.com/chromaticwhale"](http://twitter.com/chromaticwhale).
+The bot is currently tweeting to [@chromaticwhale](http://twitter.com/chromaticwhale).
 
 This was initially done via [cheapbotsdonequick](http://cheapbotsdonequick.com/),
 a really easy to use service that just takes a tracery grammar and

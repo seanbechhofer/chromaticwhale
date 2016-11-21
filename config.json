@@ -1,5 +1,5 @@
 {
-  "grammar": "whale.json",
+  "grammar": "grammar/whale.json",
   "production": "origin",
   "frequency": 3
 }

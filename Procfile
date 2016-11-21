@@ -1,1 +1,1 @@
-worker: python python/tweetbot.py --config python/config.json
+worker: python python/tweetbot.py --config config.json

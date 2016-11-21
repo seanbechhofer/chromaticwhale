@@ -8,11 +8,10 @@ import argparse
 
 import tracery
 from tracery.modifiers import base_english
-import sparql
 
 parser = argparse.ArgumentParser(description='Generate Tracery Grammar.')
 parser.add_argument('-i', '--input', help='output file', default="grammar.json")
-parser.add_argument('-n', '--number', help='output file', type=int, default=4)
+parser.add_argument('-n', '--number', help='output file', type=int, default=1)
 parser.add_argument('-p', '--production', default="origin")
 parser.add_argument('--html', action="store_true")
 

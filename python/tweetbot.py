@@ -67,15 +67,16 @@ if __name__=="__main__":
     else:
         diceRoll = randint(0,frequency-1)
         if diceRoll == 0:
+            api = twitter.Api(consumer_key,
+                            consumer_secret,
+                            access_token_key,
+                            access_token_secret)
+            account_name = api.VerifyCredentials().screen_name
+            print "Verified: {}".format((account_name))
             if args.notweet:
+                print "Not tweeted"
                 print tweetText
             else:
-                api = twitter.Api(consumer_key,
-                                consumer_secret,
-                                access_token_key,
-                                access_token_secret)
-                account_name = api.VerifyCredentials().screen_name
-                print "Verified: {}".format((account_name))
                 status = api.PostUpdate(tweetText)
                 print "http://twitter.com/{}/status/{}".format(account_name, status.id)
                 print status.text

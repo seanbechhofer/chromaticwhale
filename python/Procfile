@@ -1,1 +1,1 @@
-worker: python tweetbot.py --config config-folk.json
+worker: python tweetbot.py --config config.json

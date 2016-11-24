@@ -156,7 +156,6 @@
         "Euro.nm", 
         "Zagreb Stock Exchange", 
         "Cyprus Stock Exchange", 
-        "List of European stock exchanges", 
         "SIX Swiss Exchange", 
         "Tallinn Stock Exchange", 
         "Euronext", 
@@ -262,8 +261,13 @@
         "will be diverted via #station#", 
         "will #maybe_call# call at #station#"
     ], 
-    "duration": "#number# #unit.s#", 
     "infestation": "#station# closed due to #infestation_type##animal_or_pest.s#. #infestation_disruption.capitalize#", 
+    "duration": "#number# #unit.s#", 
+    "suspected": [
+        "suspected", 
+        "observed"
+    ], 
+    "modified_animal": "#animal_modifier##animal#", 
     "unit": [
         "minute", 
         "minute", 
@@ -331,6 +335,7 @@
         "Robert's snow vole", 
         "Orkney vole"
     ], 
+    "modified_monster": "#animal_modifier##monster#", 
     "cause": [
         "#rodent#", 
         "#amphibian#", 
@@ -340,6 +345,55 @@
     "service": "the #time# from #station# to #station#", 
     "disruption": [
         "#service# #disrupted#"
+    ], 
+    "crime_organisation": [
+        "Cult of the Unwritten Book", 
+        "Terror Titans", 
+        "Justice Lords", 
+        "Robot Renegades", 
+        "S.P.I.D.E.R.", 
+        "Shadowspire", 
+        "H.I.V.E.", 
+        "Secret Society of Super Villains", 
+        "Red Lantern Corps", 
+        "Dark Circle", 
+        "Injustice Gang", 
+        "Injustice League", 
+        "Injustice Society", 
+        "Court of Owls", 
+        "Suicide Squad", 
+        "The Pentacle", 
+        "League of Super-Assassins", 
+        "League of Assassins", 
+        "Circus of Strange", 
+        "Intergang", 
+        "Jokerz", 
+        "Titans East", 
+        "Sinestro Corps", 
+        "Anti-Justice League", 
+        "Brotherhood of Dada", 
+        "Death Eater", 
+        "Stanfield Organization", 
+        "Barksdale Organization", 
+        "Jhereg", 
+        "Orion Syndicate", 
+        "Kuuma Empire", 
+        "Organizations of Alias", 
+        "Sons of Anarchy Motorcycle Club", 
+        "World of Ghost in the Shell", 
+        "Galactor", 
+        "Faction Paradox", 
+        "Shadow Thieves", 
+        "Wallenquist Organization", 
+        "Grove Street Families", 
+        "New Day Co-Op", 
+        "The Axe Gang", 
+        "Foot Clan", 
+        "Iquan's Party", 
+        "Beagle Boys", 
+        "SPECTRE", 
+        "The Greeks of The Wire", 
+        "Tiger Mafia"
     ], 
     "minutes": [
         "00", 
@@ -405,9 +459,17 @@
     ], 
     "location": [
         "in the #station# area", 
-        "between #station# and #station#"
+        "between #station# and #station#", 
+        "outside #station#", 
+        "on the #station# line"
     ], 
-    "modified_animal": "#animal_modifier##animal#", 
+    "crime": [
+        "#crime_organisation# #crime_activity# #suspected# #location#"
+    ], 
+    "crime_activity": [
+        "activity", 
+        "operations"
+    ], 
     "animal_or_pest": [
         "#animal#", 
         "#pest#"
@@ -921,16 +983,18 @@
         "#amphibian#"
     ], 
     "sighted": [
-        "sighted", 
-        "on the tracks", 
-        "reported"
+        "sighted near", 
+        "on the tracks near", 
+        "reported near", 
+        "approaching"
     ], 
     "consequence": [
         "delays of #modifier##duration# #expectation#", 
         "disruption #expectation# for the next #duration#", 
         "limited catering on #service#", 
         "#caution# advised", 
-        "replacement bus service between #station# and #station#"
+        "replacement bus service between #station# and #station#", 
+        "tickets will be accepted on services via #station#"
     ], 
     "amphibian": [
         "Ambrosi's cave salamander", 
@@ -1006,9 +1070,12 @@
     "issue": [
         "reports of #cause.s# #location#", 
         "#problem.s# #location# caused by #cause.s#", 
-        "#modified_animal.a# #sighted# near #station#", 
-        "#monster.capitalize# #sighted# near #station#", 
-        "#quantity# #animal.s# reported at #station#"
+        "#modified_animal.a# #sighted# #station#", 
+        "#monster# #sighted# #station#", 
+        "#modified_monster.a# #sighted# #station#", 
+        "#quantity# #animal.s# reported at #station#", 
+        "#quantity# #animal.s# expected #location#", 
+        "#crime#"
     ], 
     "maybe_call": [
         "no longer", 

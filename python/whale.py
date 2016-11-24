@@ -42,6 +42,7 @@ SELECT distinct ?thing ?name WHERE
 ?thing dct:subject dbc:Stock_exchanges_in_Europe.
 ?thing rdfs:label ?name.
 FILTER (lang(?name) = 'en')
+FILTER (!regex(?name, "list", "i"))
 }
 """
 
@@ -107,6 +108,29 @@ FILTER (!regex(?name, "genus", "i"))
 FILTER (!regex(?name, "entomology", "i"))
 FILTER (!regex(?name, "moth", "i"))
 
+}
+"""
+
+crime_organisation_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+{
+ {?thing rdf:type yago:WikicatDCComicsSupervillainTeams.}
+ UNION
+ {?thing dct:subject dbc:Fictional_organized_crime_groups.}
+}
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name, "\\\\(", "i"))
+FILTER (!regex(?name, "list", "i"))
 }
 """
 
@@ -182,6 +206,7 @@ monster = dbpedia_things(godzilla_query)
 rodents = dbpedia_things(rodent_query)
 amphibians = dbpedia_things(amphibian_query)
 pests = dbpedia_things(pests_query)
+crime_organisation = dbpedia_things(crime_organisation_query)
 weather = []
 for w in dbpedia_things(weather_query):
     weather.append(w.lower())
@@ -205,9 +230,15 @@ rules = {
                '#infestation#'],
     'issue':  ['reports of #cause.s# #location#',
                '#problem.s# #location# caused by #cause.s#',
-               '#modified_animal.a# #sighted# near #station#',
-               '#monster.capitalize# #sighted# near #station#',
-               '#quantity# #animal.s# reported at #station#'],
+               '#modified_animal.a# #sighted# #station#',
+               '#monster# #sighted# #station#',
+               '#modified_monster.a# #sighted# #station#',
+               '#quantity# #animal.s# reported at #station#',
+               '#quantity# #animal.s# expected #location#',
+               '#crime#'],
+    'crime': ['#crime_organisation# #crime_activity# #suspected# #location#'],
+    'crime_activity': ['activity', 'operations'],
+    'suspected': ['suspected', 'observed'], 
     'market_issue': [
         'falling values on the #market#',
         'heavy trading on the #market#',
@@ -216,8 +247,9 @@ rules = {
     'infestation': '#station# closed due to #infestation_type##animal_or_pest.s#. #infestation_disruption.capitalize#',
     'infestation_type': ['', 'an infestation of '],
     'infestation_disruption': ['delays expected', 'services will run via #station# for the next #duration#.', 'replacement bus service from #station#.'],
-    'sighted': ['sighted', 'on the tracks', 'reported'],
+    'sighted': ['sighted near', 'on the tracks near', 'reported near', 'approaching'],
     'modified_animal': '#animal_modifier##animal#',
+    'modified_monster': '#animal_modifier##monster#',
     'animal_modifier': ['', '', '', 'large ', 'aggressive ', 'rare ', 'sleeping ', 'bewildered ',
                         'drunk ', 'distressed ', 'unkempt ', 'weak ', 'curious ', 'migrating '], 
     'disruption': ['#service# #disrupted#'],
@@ -236,7 +268,9 @@ rules = {
                 'staff shortage',
                 'signal failure'],
     'location': ['in the #station# area',
-                 'between #station# and #station#'],
+                 'between #station# and #station#',
+                 'outside #station#',
+                 'on the #station# line'],
     'animal_or_pest': ['#animal#','#pest#'],
     'animal': ['#rodent#', '#amphibian#'],
     'cause': ['#rodent#','#amphibian#', '#weather#', '#hazard#'],
@@ -244,7 +278,8 @@ rules = {
             'disruption #expectation# for the next #duration#',
             'limited catering on #service#',
             '#caution# advised',
-            'replacement bus service between #station# and #station#'],
+            'replacement bus service between #station# and #station#',
+            'tickets will be accepted on services via #station#'],
     'caution': ['caution', 'care'],
     'modifier': ['at least ', 'up to ', 'over '],
     'duration': '#number# #unit.s#',
@@ -258,7 +293,8 @@ rules = {
     'hazard': hazard,
     'station': stations,
     'market': markets,
-    'monster': monster
+    'monster': monster,
+    'crime_organisation': crime_organisation
 }
 
 # Write the grammar out to json

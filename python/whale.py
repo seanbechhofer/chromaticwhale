@@ -9,7 +9,7 @@ import argparse
 import tracery
 from tracery.modifiers import base_english
 import sparql
-
+import re
 
 parser = argparse.ArgumentParser(description='Generate Tracery Grammar.')
 parser.add_argument('-o', '--output', help='output file', default="whale.json")
@@ -206,7 +206,9 @@ monster = dbpedia_things(godzilla_query)
 rodents = dbpedia_things(rodent_query)
 amphibians = dbpedia_things(amphibian_query)
 pests = dbpedia_things(pests_query)
-crime_organisation = dbpedia_things(crime_organisation_query)
+crime_organisation = []
+for c in dbpedia_things(crime_organisation_query):
+    crime_organisation.append(re.sub('^The ', '', c))
 weather = []
 for w in dbpedia_things(weather_query):
     weather.append(w.lower())

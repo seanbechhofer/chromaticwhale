@@ -236,8 +236,9 @@ rules = {
                '#monster# #sighted# #station#',
                '#modified_monster.a# #sighted# #station#',
                '#quantity# #animal.s# reported at #station#',
-               '#quantity# #animal.s# expected #location#',
-               '#crime#'],
+#               '#crime#',
+               '#quantity# #animal.s# expected #location#'
+               ],
     'crime': ['#crime_organisation# #crime_activity# #suspected# #location#'],
     'crime_activity': ['activity', 'operations'],
     'suspected': ['suspected', 'observed'], 

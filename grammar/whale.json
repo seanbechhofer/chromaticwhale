@@ -1074,8 +1074,7 @@
         "#monster# #sighted# #station#", 
         "#modified_monster.a# #sighted# #station#", 
         "#quantity# #animal.s# reported at #station#", 
-        "#quantity# #animal.s# expected #location#", 
-        "#crime#"
+        "#quantity# #animal.s# expected #location#"
     ], 
     "maybe_call": [
         "no longer", 

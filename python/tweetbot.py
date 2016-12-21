@@ -40,6 +40,7 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Generate Tracery Grammar.')
     parser.add_argument('-c', '--config', help='configuration file', default="config.json")
     parser.add_argument('-n', '--notweet', help='no tweeting', action="store_true")
+    parser.add_argument('-d', '--debug', help='debug', action="store_true")
 
     args = parser.parse_args()
 
@@ -66,14 +67,14 @@ if __name__=="__main__":
         print "Unsuccesful Generation"
     else:
         diceRoll = randint(0,frequency-1)
-        if diceRoll == 0:
+        if args.debug or diceRoll == 0:
             api = twitter.Api(consumer_key,
                             consumer_secret,
                             access_token_key,
                             access_token_secret)
             account_name = api.VerifyCredentials().screen_name
             print "Verified: {}".format((account_name))
-            if args.notweet:
+            if args.notweet or args.debug:
                 print "Not tweeted"
                 print tweetText
             else:

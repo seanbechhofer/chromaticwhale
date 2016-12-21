@@ -1069,22 +1069,29 @@
     ], 
     "issue": [
         "reports of #cause.s# #location#", 
+        "reports of #cause.s# #location#", 
+        "#problem.s# #location# caused by #cause.s#", 
         "#problem.s# #location# caused by #cause.s#", 
         "#modified_animal.a# #sighted# #station#", 
         "#monster# #sighted# #station#", 
         "#modified_monster.a# #sighted# #station#", 
-        "#quantity# #animal.s# reported at #station#", 
-        "#quantity# #animal.s# expected #location#"
+        "#quantity##animal.s# reported at #station#", 
+        "#quantity##animal.s# reported at #station#", 
+        "#quantity##animal.s# expected #location#", 
+        "#quantity##animal.s# expected #location#"
     ], 
     "maybe_call": [
         "no longer", 
         "additionally"
     ], 
     "quantity": [
-        "high volumes of", 
-        "several", 
-        "numerous", 
-        "unprecedented levels of", 
-        "groups of"
+        "high volumes of ", 
+        "several ", 
+        "numerous ", 
+        "unprecedented levels of ", 
+        "groups of ", 
+        "", 
+        "", 
+        "#number# "
     ]
 }

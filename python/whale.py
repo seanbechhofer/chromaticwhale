@@ -154,6 +154,27 @@ FILTER (lang(?name) = 'en')
 }
 """
 
+# North American Primates
+primate_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+?thing dct:subject dbc:Primates_of_Africa.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name,"\\\\(","i"))
+FILTER (!regex(?name, "list", "i"))
+}
+"""
+
 # Weather Conditions
 weather_query="""
 SELECT distinct ?thing ?name WHERE
@@ -206,6 +227,8 @@ monster = dbpedia_things(godzilla_query)
 rodents = dbpedia_things(rodent_query)
 amphibians = dbpedia_things(amphibian_query)
 pests = dbpedia_things(pests_query)
+primates = dbpedia_things(primate_query)
+
 crime_organisation = []
 for c in dbpedia_things(crime_organisation_query):
     crime_organisation.append(re.sub('^The ', '', c))
@@ -280,8 +303,8 @@ rules = {
                  'outside #station#',
                  'on the #station# line'],
     'animal_or_pest': ['#animal#','#pest#'],
-    'animal': ['#rodent#', '#amphibian#'],
-    'cause': ['#rodent#','#amphibian#', '#weather#', '#hazard#'],
+    'animal': ['#rodent#', '#amphibian#', '#primate#'],
+    'cause': ['#rodent#','#amphibian#', '#primate#'], # Removed #weather# and #hazard#
     'consequence': ['delays of #modifier##duration# #expectation#',
             'disruption #expectation# for the next #duration#',
             'limited catering on #service#',
@@ -302,6 +325,7 @@ rules = {
     'station': stations,
     'market': markets,
     'monster': monster,
+    'primate': primates,
     'crime_organisation': crime_organisation
 }
 

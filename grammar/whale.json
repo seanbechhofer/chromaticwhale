@@ -819,7 +819,8 @@
         "#quantity##animal.s# reported at #station#", 
         "#quantity##animal.s# reported at #station#", 
         "#quantity##animal.s# expected #location#", 
-        "#quantity##animal.s# expected #location#"
+        "#quantity##animal.s# expected #location#",
+        "#crime#"
     ], 
     "pest": [
         "Turkestan cockroach", 

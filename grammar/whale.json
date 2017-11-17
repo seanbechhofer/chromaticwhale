@@ -13,6 +13,11 @@
         "five", 
         "ten", 
         "twenty"
+    ],
+    "small_number": [
+        "two", 
+        "three", 
+        "four"
     ], 
     "rodent": [
         "Eurasian harvest mouse", 
@@ -700,7 +705,8 @@
         "is cancelled", 
         "is running #duration# late", 
         "will be diverted via #station#", 
-        "will #maybe_call# call at #station#"
+      "will #maybe_call# call at #station#",
+      "will run as #small_number# carriages"
     ], 
     "infestation": "#station# closed due to #infestation_type##animal_or_pest.s#. #infestation_disruption.capitalize#", 
     "primate": [

@@ -42,6 +42,7 @@ SELECT distinct ?thing ?name WHERE
 ?thing dct:subject dbc:Stock_exchanges_in_Europe.
 ?thing rdfs:label ?name.
 FILTER (lang(?name) = 'en')
+FILTER (!regex(?name, "\\\\(", "i"))
 FILTER (!regex(?name, "list", "i"))
 }
 """
@@ -251,7 +252,7 @@ rules = {
                '#consequence.capitalize# due to #issue#.',
                '#disruption.capitalize# due to #issue#.',
                '#disruption.capitalize# due to #issue#.',
-#               '#disruption.capitalize# due to #market_issue#.',
+               '#disruption.capitalize# due to #market_issue#.',
                '#infestation#'],
     'issue':  ['reports of #cause.s# #location#',
                'reports of #cause.s# #location#',
@@ -269,10 +270,12 @@ rules = {
     'crime': ['#crime_organisation# #crime_activity# #suspected# #location#'],
     'crime_activity': ['activity', 'operations'],
     'suspected': ['suspected', 'observed'], 
-    'market_issue': [
-        'falling values on the #market#',
-        'heavy trading on the #market#',
-        'suspicious trades on the #market#'],
+    "market_issue": [
+        "early closure of the #market#", 
+        "falling values on the #market#", 
+        "heavy trading on the #market#", 
+        "suspicious trades on the #market#"
+        ], 
     'quantity': ['high volumes of ', 'several ', 'numerous ', 'unprecedented levels of ', 'groups of ', '', '', '#number# '],
     'number': ['two', 'three', 'eight', 'a dozen', 'twelve', 'seventeen', 'forty-seven', 'fifty'],
     'infestation': '#station# closed due to #infestation_type##animal_or_pest.s#. #infestation_disruption.capitalize#',

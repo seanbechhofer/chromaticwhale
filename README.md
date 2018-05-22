@@ -32,7 +32,14 @@ and attempt to tweet it. Arguments are:
 	-c --config <config>
 		Configuration file (see below)
 	-n --notweet
-		Generate and report only, do not actually post a status update. 
+		Generate and report only, do not actually post a status
+		update.
+	-u --noauth
+	    Don't attempt to authenticate (Implies no tweeting)
+	-x --override
+	    Override randomness, i.e. always generate a tweet
+	-t --tweets <n>
+	    Produce n tweets
 ```
 		
 The configuration file is a json file that contains information about

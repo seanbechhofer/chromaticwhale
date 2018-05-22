@@ -42,13 +42,13 @@ if args.html:
     print "<body>"
     
 for i in range(0,args.number):
-    stuff = grammar.flatten("#" + args.production + "#")
+    stuff = grammar.flatten("#" + args.production + "#").encode('utf-8')
     style = ""
     if len(stuff) > LIMIT:
-        style = " red"
-
+            style = " red"
+            
     if args.html:
-        print "<div class='box" + style + "'>"
+       print "<div class='box" + style + "'>"
     if args.html:
         print "<p>{}</p>".format(stuff)
     else:

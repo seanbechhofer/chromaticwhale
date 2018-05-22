@@ -205,9 +205,12 @@ FILTER (!regex(?name,"hazards","i"))
 }
 """
 
-# Northern Rail Stations. This one works well. 
+# Northern Rail Stations. This one works well.
+
+# All change! Now ?thing dbo:operator dbr:Northern_(train_operating_company).
 station_query="""
 PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbp: <http://dbpedia.org/ontology/>
 PREFIX dbr: <http://dbpedia.org/resource/>
 PREFIX dbc: <http://dbpedia.org/resource/Category:>
 PREFIX dct: <http://purl.org/dc/terms/>
@@ -217,11 +220,14 @@ PREFIX yago-res: <http://yago-knowledge.org/resource/>
 
 SELECT distinct ?thing ?name WHERE 
 {
-?thing dbp:manager dbr:Northern_Rail.
+?thing dbo:operator <http://dbpedia.org/resource/Northern_(train_operating_company)>.
 ?thing rdfs:label ?name.
+?thing rdf:type dbo:Station.
 FILTER (lang(?name) = 'en')
 }
+ORDER BY ?name
 """
+# ?thing dbp:manager dbr:Northern_Rail.
 
 # Grab stuff from dbpedia
 monster = dbpedia_things(godzilla_query)

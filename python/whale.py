@@ -27,6 +27,30 @@ def dbpedia_things(query):
         things.append(name)
     return things
 
+# Folk Metal Bands
+metal_query="""
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE
+{
+{
+  {?thing dbo:genre dbr:Folk_metal.}
+  UNION
+  {?thing dbo:genre dbr:Doom_metal.}
+}
+?thing rdf:type dbo:Band.
+?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name, "\\\\(", "i"))
+}
+"""
+
 # European Rodents
 market_query="""
 PREFIX dbp: <http://dbpedia.org/property/>
@@ -249,6 +273,7 @@ stations = []
 for s in dbpedia_things(station_query):
     stations.append(s.replace(' railway station',''))
 markets = dbpedia_things(market_query)
+metal_band = dbpedia_things(metal_query)
 
 # Tracery Grammar
 rules = {
@@ -266,6 +291,8 @@ rules = {
                '#problem.s# #location# caused by #cause.s#',
                '#modified_animal.a# #sighted# #station#',
                '#monster# #sighted# #station#',
+               '#metal_band# #sighted# #station#',
+               '#metal_band# #sighted# #station#',
                '#modified_monster.a# #sighted# #station#',
                '#quantity##animal.s# reported at #station#',
                '#quantity##animal.s# reported at #station#',
@@ -335,7 +362,8 @@ rules = {
     'market': markets,
     'monster': monster,
     'primate': primates,
-    'crime_organisation': crime_organisation
+    'crime_organisation': crime_organisation,
+    'metal_band': metal_band
 }
 
 # Write the grammar out to json

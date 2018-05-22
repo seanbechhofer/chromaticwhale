@@ -39,8 +39,10 @@ def tweet(grammar, production):
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Generate Tracery Grammar.')
     parser.add_argument('-c', '--config', help='configuration file', default="config.json")
-    parser.add_argument('-n', '--notweet', help='no tweeting', action="store_true")
+    parser.add_argument('-n', '--notweet', help='no actual tweeting', action="store_true")
     parser.add_argument('-d', '--debug', help='debug', action="store_true")
+    parser.add_argument('-u', '--noauth', help='don\'t authenticate. Implies no tweeting.', action="store_true")
+    parser.add_argument('-t', '--tweets', help='produce n tweets', default=1)
 
     args = parser.parse_args()
 
@@ -60,29 +62,38 @@ if __name__=="__main__":
     production = config['production']
     frequency = config['frequency']
 
+    api = None
+    account_name = ""
+
+    if args.noauth:
+        print "Not authenticating"
+    else:
+        api = twitter.Api(consumer_key,
+                              consumer_secret,
+                              access_token_key,
+                              access_token_secret)
+        account_name = api.VerifyCredentials().screen_name
+        print "Verified: {}".format((account_name))
+        
     print "Grammar: {}, production: {}".format(grammar, production)
 
-    tweetText = tweet(grammar=grammar,production=production)
-    if tweetText == "":
-        print "Unsuccesful Generation"
-    else:
-        diceRoll = randint(0,frequency-1)
-        if args.debug or diceRoll == 0:
-            api = twitter.Api(consumer_key,
-                            consumer_secret,
-                            access_token_key,
-                            access_token_secret)
-            account_name = api.VerifyCredentials().screen_name
-            print "Verified: {}".format((account_name))
-            if args.notweet or args.debug:
-                print "Not tweeted"
-                print tweetText
-            else:
-                status = api.PostUpdate(tweetText)
-                print "http://twitter.com/{}/status/{}".format(account_name, status.id)
-                print status.text
+    for i in range(0,int(args.tweets)):
+        tweetText = tweet(grammar=grammar,production=production)
+        if tweetText == "":
+            print "Unsuccesful Generation"
         else:
-            print "No Tweet this time"
+            diceRoll = randint(0,frequency-1)
+            if args.debug or diceRoll == 0:
+                if args.notweet or args.debug or args.noauth:
+                    # We haven't authenticated or explicitly asked for no tweeting. 
+                    print "Not tweeted"
+                    print tweetText
+                else:
+                    status = api.PostUpdate(tweetText)
+                    print "http://twitter.com/{}/status/{}".format(account_name, status.id)
+                    print status.text
+            else:
+                print "No Tweet this time"
             
                 
 

@@ -42,6 +42,7 @@ if __name__=="__main__":
     parser.add_argument('-n', '--notweet', help='no actual tweeting', action="store_true")
     parser.add_argument('-d', '--debug', help='debug', action="store_true")
     parser.add_argument('-u', '--noauth', help='don\'t authenticate. Implies no tweeting.', action="store_true")
+    parser.add_argument('-x', '--override', help='override randomness.', action="store_true")
     parser.add_argument('-t', '--tweets', help='produce n tweets', default=1)
 
     args = parser.parse_args()
@@ -83,7 +84,7 @@ if __name__=="__main__":
             print "Unsuccesful Generation"
         else:
             diceRoll = randint(0,frequency-1)
-            if args.debug or diceRoll == 0:
+            if args.debug or diceRoll == 0 or args.override:
                 if args.notweet or args.debug or args.noauth:
                     # We haven't authenticated or explicitly asked for no tweeting. 
                     print "Not tweeted"

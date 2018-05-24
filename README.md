@@ -1,13 +1,27 @@
 # chromaticwhale
 
-Code to generate tracery grammars for bogus travel reports.
+Twitter bot for bogus travel reports. The bot is currently tweeting to [@chromaticwhale](http://twitter.com/chromaticwhale).
 
-Pulls lists of things (European rodents, adverse weather events etc)
-and Northern Rail stations from dbpedia via the SPARQL endpoint.
+There are two stages to the process.
 
-[Tracery](https://github.com/galaxykate/tracery) grammars generate reports via [pytracery](https://github.com/aparrish/pytracery).
+1. Production of a [Tracery](https://github.com/galaxykate/tracery)
+grammar.
+2. Generation of reports using the grammar.
 
-The bot is currently tweeting to [@chromaticwhale](http://twitter.com/chromaticwhale).
+## Grammar Generation
+
+The grammar includes several lists of terminals. These are pulled from
+dbpedia via the SPARQL endpoint. Current items of interest include
+Northern Rail stations and lines, European rodents, weather
+conditions and Japanese monsters. 
+
+## Report Generation
+
+The grammar is then used to generate short reports using via
+[pytracery](https://github.com/aparrish/pytracery). These are then
+tweeted using the
+[python-twitter](https://github.com/bear/python-twitter) API. 
+
 
 ## Hosting
 
@@ -60,7 +74,7 @@ Note that this assumes that the script is run from the top level
 directory, e.g.
 
 ```
-python python/twitterbot.py --config config.json
+python python/tweetbot.py --config config.json
 ```
 
 On occasion, generated tweets may be larger than 140 characters. The

@@ -253,6 +253,26 @@ ORDER BY ?name
 """
 # ?thing dbp:manager dbr:Northern_Rail.
 
+line_query="""
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbp: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX yago-res: <http://yago-knowledge.org/resource/>
+
+SELECT distinct ?thing ?name WHERE 
+{
+?thing dbo:operator <http://dbpedia.org/resource/Northern_(train_operating_company)>.
+?thing rdfs:label ?name.
+?thing rdf:type dbo:RailwayLine.
+FILTER (lang(?name) = 'en')
+}
+ORDER BY ?name
+"""
+
 # Grab stuff from dbpedia
 monster = dbpedia_things(godzilla_query)
 rodents = dbpedia_things(rodent_query)
@@ -269,12 +289,12 @@ for w in dbpedia_things(weather_query):
 hazard = []
 for h in dbpedia_things(hazard_query):
     hazard.append(h.lower())
-stations = []
+station = []
 for s in dbpedia_things(station_query):
-    stations.append(s.replace(' railway station',''))
-markets = dbpedia_things(market_query)
+    station.append(s.replace(' railway station',''))
+line = dbpedia_things(line_query)
+market = dbpedia_things(market_query)
 metal_band = dbpedia_things(metal_query)
-
 # Tracery Grammar
 rules = {
     'origin': ['#issue.capitalize#. #consequence.capitalize#.',
@@ -326,7 +346,8 @@ rules = {
                   'is delayed', 'is cancelled',
                   'is running #duration# late',
                   'will be diverted via #station#',
-                  'will #maybe_call# call at #station#'],
+                  'will #maybe_call# call at #station#',
+                  'will run via the #line#'],
     'maybe_call': ['no longer', 'additionally'],
     'time': ['#hours#:#minutes#'],
     'hours': map(lambda x:("{:02d}".format(x)), range(0,24)),
@@ -358,8 +379,9 @@ rules = {
     'amphibian': amphibians,
     'weather': weather,
     'hazard': hazard,
-    'station': stations,
-    'market': markets,
+    'station': station,
+    'line': line,
+    'market': market,
     'monster': monster,
     'primate': primates,
     'crime_organisation': crime_organisation,

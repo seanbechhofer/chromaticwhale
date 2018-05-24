@@ -216,6 +216,21 @@ FILTER (!regex(?name,"\\\\(","i"))
 }
 """
 
+# Weather Conditions
+weather_query="""
+SELECT distinct ?thing ?name WHERE
+{
+ {
+  {?thing dct:subject dbc:Snow_or_ice_weather_phenomena.}
+      UNION
+  {?thing dct:subject <http://dbpedia.org/resource/Category:Clouds,_fog_and_precipitation>.}.
+ }
+ ?thing rdfs:label ?name.
+FILTER (lang(?name) = 'en')
+FILTER (!regex(?name,"\\\\(","i"))
+}
+"""
+
 # Again, some hand pruning to get rid of chaff.
 hazard_query="""
 SELECT distinct ?thing ?name WHERE
@@ -314,6 +329,8 @@ rules = {
                '#metal_band# #sighted# #station#',
                '#metal_band# #sighted# #station#',
                '#modified_monster.a# #sighted# #station#',
+               'forecast of #weather# #location#',
+               '#weather# expected #location#',
                '#quantity##animal.s# reported at #station#',
                '#quantity##animal.s# reported at #station#',
 #               '#crime#',
